@@ -22,7 +22,7 @@ I've also added features (see below) but I plan to put these features in their o
 
 ## How does it work?
 ### Backend
-The `web/index.js` needs these additions:
+The `web/index.js` needs these 2 additions:
 ```
 // SATN
   import serveStatic from "serve-static";
@@ -109,6 +109,48 @@ We've also added these directories (but plan to remove it progressively):
 - `web/s3` : a s3 module to upload files to s3 for your apps
 
 All of these wrappers will be moved to their own packages so that it doesn't pollute the web directory.
+
+### Frontend
+The `web/frontend/App.jsx` needs this addition:
+```
+let pages = import.meta.globEager("./pages/**/!(*.test.[jt]sx)*.([jt]sx)");
+
+// SATN
+let modulesPages = import.meta.globEager("./node_modules/**/frontend/pages/**/!(*.test.[jt]sx)*.([jt]sx)");
+pages = { ...modulesPages, ...pages };
+const links = Object.keys(pages).filter(key => !key.includes('index') && !key.includes('NotFound')).map((key) => {
+  let destination = key
+    .replace(/\.\/node_modules\/(.*)\/frontend\/pages/, "")
+    .replace("./pages", "")
+    .replace(/\.(t|j)sx?$/, "")
+  let label = destination
+    .replace('/', '')
+    .replace(/\b[a-z]/, (firstLetter) => firstLetter.toUpperCase())
+
+  return {
+    destination,
+    label,
+  }
+});
+// /SATN
+```
+
+- The following code searches for all the pages in the node_modules /frontend/pages directory and adds them to the pages object.
+```
+let modulesPages = import.meta.globEager("./node_modules/**/frontend/pages/**/!(*.test.[jt]sx)*.([jt]sx)");
+pages = { ...modulesPages, ...pages };
+```
+
+- The rest of the code will be used to generate the navigation menu.
+
+The `web/frontend/Routes.jsx` needs this addition:
+```
+.map((key) => {
+      let path = key
+        .replace(/\.\/node_modules\/(.*)\/frontend\/pages/, "")   <=====
+        .replace("./pages", "")
+```
+- This single line removes the undesirable part of the path of your Shopify app package.
 
 ## New features
 - mail service : The mailer is based on NodeMailer and uses the Shopify Liquid Template Engine: The mail templates are stored in the shopify theme and can be edited by the merchant as liquid files !
