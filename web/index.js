@@ -12,6 +12,22 @@ import productCreator from "./helpers/product-creator.js";
 import { BillingInterval } from "./helpers/ensure-billing.js";
 import { AppInstallations } from "./app_installations.js";
 
+// SATN
+import serveStatic from "serve-static";
+import dotenv from "dotenv";
+import { DynamoSessionStorage } from "./dynamoSessionStorage/index.js";
+import * as db from "./database/index.js";
+import path from 'path';
+import { fileURLToPath } from 'url';
+dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+global.appRoot = path.resolve(__dirname);
+// The DynamoDB table must be created the very first time the server is launched.
+// If it already exists, it continues
+await db.createTable();
+// /SATN
+
 const USE_ONLINE_TOKENS = false;
 const TOP_LEVEL_OAUTH_COOKIE = "shopify_top_level_oauth";
 
@@ -32,7 +48,7 @@ Shopify.Context.initialize({
   API_VERSION: LATEST_API_VERSION,
   IS_EMBEDDED_APP: true,
   // This should be replaced with your preferred storage strategy
-  SESSION_STORAGE: new Shopify.Session.SQLiteSessionStorage(DB_PATH),
+  SESSION_STORAGE: DynamoSessionStorage,
 });
 
 Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
@@ -138,6 +154,15 @@ export async function createServer(
   // attribute, as a result of the express.json() middleware
   app.use(express.json());
 
+  // SATN
+  const modules = process.env.MODULES.split(",")
+  for (const module of modules) {
+    const mod = await import(module);
+    app.use('/app', mod.router);
+  };
+  app.use('/public', serveStatic(`${process.cwd()}/public/`, { index: false }));
+  // /SATN
+
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);
     if (Shopify.Context.IS_EMBEDDED_APP && shop) {
@@ -157,9 +182,9 @@ export async function createServer(
     const compression = await import("compression").then(
       ({ default: fn }) => fn
     );
-    const serveStatic = await import("serve-static").then(
-      ({ default: fn }) => fn
-    );
+    // const serveStatic = await import("serve-static").then(
+    //   ({ default: fn }) => fn
+    // );
     app.use(compression());
     app.use(serveStatic(PROD_INDEX_PATH, { index: false }));
   }
