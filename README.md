@@ -25,10 +25,9 @@ I've also added features (see below) but I plan to put these features in their o
 The `web/index.js` needs these 2 additions:
 ```
 // SATN
+  import { dynamo, DynamoSessionStorage } from 'satn-aws-wrapper';
   import serveStatic from "serve-static";
   import dotenv from "dotenv";
-  import { DynamoSessionStorage } from "./dynamoSessionStorage/index.js";
-  import * as db from "./database/index.js";
   import path from 'path';
   import { fileURLToPath } from 'url';
   const __filename = fileURLToPath(import.meta.url);
@@ -38,7 +37,7 @@ The `web/index.js` needs these 2 additions:
   //import router from "geofilter";
   // The DynamoDB table must be created the very first time the server is launched.
   // If it already exists, it continues
-  await db.createTable();
+  await dynamo.createTable();
 // /SATN
 ```
 
@@ -82,7 +81,7 @@ MODULES="geofilter"
 ...
 ```
 - `DynamoSessionStorage` is our session storage adapter for DynamoDB. I plan to push a PR to Shopify so that they can include it in their project.
-- db is the dynamodb database module. It is a simple wrapper around the AWS SDK.
+- dynamo is the dynamodb database module. It is a simple wrapper around the AWS SDK.
 - the following code is just to have the __dirname variable available + expose it as a global var to the packages you'll build
 ```
 import path from 'path';
@@ -91,23 +90,21 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 global.appRoot = path.resolve(__dirname);
 ```
-- `await db.createTable();` is just there so that it creates the dynamoDB database the first time you launch the app.
+- `await dynamo.createTable();` is just there so that it creates the dynamoDB database the first time you launch the app.
 - The following code is the secret sauce of Satn on Steroids: It allows you to add your own routes to the app. You just have to add the name of your package in the MODULES environment variable. And you can add as many packages as you want.
 ```
   const modules = process.env.MODULES.split(",")
   for (const module of modules) {
     const mod = await import(module);
     app.use('/app', mod.router);
+    app.use(`/app/${module}/api/*`,verifyRequest(app, { billing: billingSettings}));
   };
 ```
 
 We've also added these directories (but plan to remove it progressively):
 - `web/cacheProvider` : a cache provider for your apps
-- `web/database` : the dynamoDB database module
-- `web/dynamoSessionStorage` : the session storage adapter for DynamoDB
 - `web/mail` : a mail module to send emails for your apps
 - `web/public` : the public directory where you can host files like images, pdf, etc.
-- `web/s3` : a s3 module to upload files to s3 for your apps
 
 All of these wrappers will be moved to their own packages so that it doesn't pollute the web directory.
 
