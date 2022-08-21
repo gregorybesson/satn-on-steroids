@@ -205,6 +205,8 @@ It means that you'll develop your app in a separate project and you'll just have
 During the development phase, you'll create the app in the `web` directory. But when you'll be ready to deploy your app, you'll have to create a separate project and install it as a dependency of the `web` project.
 
 The organisation of your Shopify app project is that simple:
+- extensions
+  - ... your extensions
 - frontend
   - frontend/assets
   - frontend/components
@@ -216,6 +218,18 @@ The organisation of your Shopify app project is that simple:
   - services/index.js
 index.js
 package.json
+shopify.app.toml
+
+** Important **
+package.json has to include the following:
+```
+  "devDependencies": {
+    "@shopify/app": "^3.0.0",
+    "@shopify/cli": "^3.0.0"
+  }
+```
+
+and the script `"deploy": "shopify app deploy"` to be able to deploy your app extensions with `yarn deploy`
 
 # Develop your first Shopify App: Geofilter
 ## Introduction
