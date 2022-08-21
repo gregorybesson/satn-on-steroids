@@ -198,7 +198,7 @@ Enjoy!
 
 # Architecture of your Shopify App
 ## Introduction
-As explained, the whole idea behind this project is to let clear the orginal projet Shopify App Template - Node from all the code that is not related to the Shopify App Template - Node project.
+As explained, the whole idea behind this project is to let clear the original projet Shopify App Template - Node from all the code that is not related to the Shopify App Template - Node project.
 It means that you'll develop your app in a separate project and you'll just have to add the name of your package in the MODULES environment variable + make an `npm install` of your package.
 
 ## How to create your own package
@@ -219,6 +219,6 @@ package.json
 
 # Develop your first Shopify App: Geofilter
 ## Introduction
-We will create a real shopify app that will allow to redirect visitors of a shop to another URL depending on the country they are coming from (based on th IP address). This project is complex enough to illustrate all the feature of Satn on Steroids.
+We will create a real shopify app that will allow to redirect visitors of a shop to another URL depending on the country they are coming from (based on th IP address). This project is complex enough to illustrate all the features of Satn on Steroids.
 
 TBD
