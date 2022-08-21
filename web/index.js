@@ -13,10 +13,9 @@ import { BillingInterval } from "./helpers/ensure-billing.js";
 import { AppInstallations } from "./app_installations.js";
 
 // SATN
+import { dynamo, DynamoSessionStorage } from 'satn-aws-wrapper';
 import serveStatic from "serve-static";
 import dotenv from "dotenv";
-import { DynamoSessionStorage } from "./dynamoSessionStorage/index.js";
-import * as db from "./database/index.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
 dotenv.config();
@@ -25,7 +24,7 @@ const __dirname = path.dirname(__filename);
 global.appRoot = path.resolve(__dirname);
 // The DynamoDB table must be created the very first time the server is launched.
 // If it already exists, it continues
-await db.createTable();
+await dynamo.createTable();
 // /SATN
 
 const USE_ONLINE_TOKENS = false;
