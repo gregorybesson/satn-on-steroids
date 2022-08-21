@@ -49,6 +49,7 @@ and
   for (const module of modules) {
     const mod = await import(module);
     app.use('/app', mod.router);
+    app.use(`/app/${module}/api/*`,verifyRequest(app, { billing: billingSettings}));
   };
   app.use('/public', serveStatic(`${process.cwd()}/public/`, { index: false }));
   // /SATN
@@ -151,6 +152,15 @@ The `web/frontend/Routes.jsx` needs this addition:
         .replace("./pages", "")
 ```
 - This single line removes the undesirable part of the path of your Shopify app package.
+
+For development, we need to add a line to the proxy filter in `web/frontend/vite.config.js`:
+```
+proxy: {
+  "^/(\\?.*)?$": proxyOptions,
+  "^/app/(.*)/api(/|(\\?.*)?$)": proxyOptions, <=======
+  "^/api(/|(\\?.*)?$)": proxyOptions,
+},
+```
 
 ## New features
 - mail service : The mailer is based on NodeMailer and uses the Shopify Liquid Template Engine: The mail templates are stored in the shopify theme and can be edited by the merchant as liquid files !

@@ -159,6 +159,7 @@ export async function createServer(
   for (const module of modules) {
     const mod = await import(module);
     app.use('/app', mod.router);
+    app.use(`/app/${module}/api/*`,verifyRequest(app, { billing: billingSettings}));
   };
   app.use('/public', serveStatic(`${process.cwd()}/public/`, { index: false }));
   // /SATN
