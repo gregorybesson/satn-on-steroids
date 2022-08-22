@@ -38,6 +38,8 @@ The `web/index.js` needs these 2 additions:
   // The DynamoDB table must be created the very first time the server is launched.
   // If it already exists, it continues
   await dynamo.createTable();
+  const DEV_INDEX_PATH = `${process.cwd()}/../frontend/`;
+  const PROD_INDEX_PATH = `${process.cwd()}/../frontend/dist/`;
 // /SATN
 ```
 
@@ -100,15 +102,23 @@ global.appRoot = path.resolve(__dirname);
     app.use(`/app/${module}/api/*`,verifyRequest(app, { billing: billingSettings}));
   };
 ```
+- Note that I'm not big fan of git submodules, I've moved the frontend directory in the root directory of the project + I've made it a first class citizen in the project as it will become a "gateway" to gather frontends from all your apps (see below).
+```
+const DEV_INDEX_PATH = `${process.cwd()}/../frontend/`;
+const PROD_INDEX_PATH = `${process.cwd()}/../frontend/dist/`;
+```
+(don't forget to comment out these variables lower in the code)
 
 We've also added these directories (but plan to remove it progressively):
 - `web/cacheProvider` : a cache provider for your apps
 - `web/mail` : a mail module to send emails for your apps
 - `web/public` : the public directory where you can host files like images, pdf, etc.
 
-All of these wrappers will be moved to their own packages so that it doesn't pollute the web directory.
+`web/cacheProvider` and `web/mail` will be moved eventually to their own packages so that it doesn't pollute the web directory.
 
 ### Frontend
+We've used this project as a starting point for the frontend: https://github.com/Shopify/shopify-frontend-template-react and made some additions so that all the frontends of your apps are gathered in the same place.
+
 The `web/frontend/App.jsx` needs this addition:
 ```
 let pages = import.meta.globEager("./pages/**/!(*.test.[jt]sx)*.([jt]sx)");
@@ -172,10 +182,8 @@ proxy: {
 # Installation
 This project respects the Shopify App Template - Node installation process:
 1. git clone this project
-2. git submodule init (to install the frontend submodule)
-3. git submodule update (to install the frontend submodule)
-4. SHOPIFY_API_KEY=your_api_key yarn shopify app build
-5. yarn shopify app dev
+2. SHOPIFY_API_KEY=your_api_key yarn shopify app build
+3. yarn shopify app dev
 
 If this address doesn't work:
 https://xxxxx.ngrok.io?shop=myshop.myshopify.com&host=base64host
@@ -187,12 +195,10 @@ Enjoy!
 
 ## Alternative way to install / deploy in production
 1. git clone this project
-2. git submodule init (to install the frontend submodule)
-3. git submodule update (to install the frontend submodule)
-4. SHOPIFY_API_KEY=your_api_key yarn shopify app build
-5. go to the `web` directory and rename the .env.sample and update the values
-6. launch `yarn dev` in the `web` directory
-7. go to the `frontend` directory and launch : SHOPIFY_API_KEY=xxxxxx FRONTEND_PORT=56000 BACKEND_PORT=8081 HOST=livingcolor.ngrok.io npm run dev (BACKEND_PORT and HOST are the ones you find in your `/web/.env` file )
+2. SHOPIFY_API_KEY=your_api_key yarn shopify app build
+3. go to the `web` directory and rename the .env.sample and update the values
+4. launch `yarn dev` in the `web` directory
+5. go to the `frontend` directory and launch : SHOPIFY_API_KEY=xxxxxx FRONTEND_PORT=56000 BACKEND_PORT=8081 HOST=livingcolor.ngrok.io npm run dev (BACKEND_PORT and HOST are the ones you find in your `/web/.env` file )
 8. Use ngrok to expose YOUR FRONTEND PORT (56000 in my case) to the internet: `ngrok http 56000 --subdomain=livingcolor`
 9. Optional (only if you want to access some routes without passing by the proxy like the /public directory) : Use ngrok to expose YOUR BACKEND PORT (8081 in my case) to the internet: `ngrok http 8081 --subdomain=livingcolor2`
 
