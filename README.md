@@ -133,6 +133,8 @@ const links = Object.keys(pages).filter(key => !key.includes('index') && !key.in
 // /SATN
 ```
 
+And you need to change the navigationLinks to: `navigationLinks={links}`
+
 - The following code searches for all the pages in the node_modules /frontend/pages directory and adds them to the pages object.
 ```
 let modulesPages = import.meta.globEager("./node_modules/**/frontend/pages/**/!(*.test.[jt]sx)*.([jt]sx)");
@@ -154,7 +156,7 @@ For development, we need to add a line to the proxy filter in `web/frontend/vite
 ```
 proxy: {
   "^/(\\?.*)?$": proxyOptions,
-  "^/app/(.*)/api(/|(\\?.*)?$)": proxyOptions, <=======
+  "^/app(/|(\\?.*)?$)": proxyOptions, proxyOptions, <======= Here
   "^/api(/|(\\?.*)?$)": proxyOptions,
 },
 ```
