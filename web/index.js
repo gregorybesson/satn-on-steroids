@@ -25,6 +25,8 @@ global.appRoot = path.resolve(__dirname);
 // The DynamoDB table must be created the very first time the server is launched.
 // If it already exists, it continues
 await dynamo.createTable();
+const DEV_INDEX_PATH = `${process.cwd()}/../frontend/`;
+const PROD_INDEX_PATH = `${process.cwd()}/../frontend/dist/`;
 // /SATN
 
 const USE_ONLINE_TOKENS = false;
@@ -33,8 +35,8 @@ const TOP_LEVEL_OAUTH_COOKIE = "shopify_top_level_oauth";
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
 // TODO: There should be provided by env vars
-const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
-const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
+//const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
+//const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 
 const DB_PATH = `${process.cwd()}/database.sqlite`;
 
