@@ -20,13 +20,13 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.1",
     "express": "^4.17.3",
-    "geofilter": "github:abecms/omnishop-geofilter",
+    "geofilter": "https://github.com/abecms/omnishop-geofilter",
     "liquidjs": "^9.40.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "node-cache": "^5.1.2",
     "nodemailer": "^6.7.8",
-    "satn-aws-wrapper": "github:abecms/satn-aws-wrapper",
+    "satn-aws-wrapper": "https://github.com/gregorybesson/satn-aws-wrapper",
     "serve-static": "^1.14.1"
   },
   "devDependencies": {
