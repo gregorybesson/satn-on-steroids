@@ -34,6 +34,7 @@ function useRoutes(pages) {
   const routes = Object.keys(pages)
     .map((key) => {
       let path = key
+        .replace(/\.\/\.\.\/app\/(.*)\/frontend\/pages/, "")
         .replace(/\.\/node_modules\/(.*)\/frontend\/pages/, "")
         .replace("./pages", "")
         .replace(/\.(t|j)sx?$/, "")

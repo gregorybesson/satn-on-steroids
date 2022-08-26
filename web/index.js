@@ -155,12 +155,22 @@ export async function createServer(
   app.use(express.json());
 
   // SATN
-  const modules = process.env.MODULES.split(",")
+  const modules = process.env.MODULES?.split(",") || [];
   for (const module of modules) {
     const mod = await import(module);
     app.use('/app', mod.router);
     app.use(`/app/${module}/api/*`,verifyRequest(app, { billing: billingSettings}));
   };
+  if (!isProd) {
+    const devmodules = process.env.DEV_MODULES?.split(",") || [];
+    for (const devmodule of devmodules) {
+      console.log('dev module:', devmodule);
+      const module = devmodule.split('/').pop();
+      const mod = await import(`${devmodule}/index.js`);
+      app.use('/app', mod.router);
+      app.use(`/app/${module}/api/*`,verifyRequest(app, { billing: billingSettings}));
+    };
+  }
   app.use('/public', serveStatic(`${process.cwd()}/public/`, { index: false }));
   // /SATN
 

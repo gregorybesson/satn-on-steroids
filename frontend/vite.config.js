@@ -4,6 +4,11 @@ import { fileURLToPath } from "url";
 import https from "https";
 import react from "@vitejs/plugin-react";
 
+// SATN
+import dotenv from "dotenv";
+dotenv.config();
+// /SATN
+
 if (
   process.env.npm_lifecycle_event === "build" &&
   !process.env.CI &&
@@ -42,7 +47,13 @@ if (host === "localhost") {
   };
 }
 
-//"^/app/(.*)/api(/|(\\?.*)?$)": proxyOptions,
+// SATN adding
+// "^/app(/|(\\?.*)?$)": proxyOptions,
+// fs: {
+//   // Allow serving files from one level up to the project root
+//   allow: ['..'],
+// },
+// /SATN
 export default defineConfig({
   root: dirname(fileURLToPath(import.meta.url)),
   plugins: [react()],
@@ -60,6 +71,10 @@ export default defineConfig({
       "^/(\\?.*)?$": proxyOptions,
       "^/app(/|(\\?.*)?$)": proxyOptions,
       "^/api(/|(\\?.*)?$)": proxyOptions,
+    },
+    fs: {
+      // Allow serving files from one level up to the project root
+      allow: ['..'],
     },
   },
 });

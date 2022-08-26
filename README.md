@@ -198,9 +198,9 @@ Enjoy!
 2. SHOPIFY_API_KEY=your_api_key yarn shopify app build
 3. go to the `web` directory and rename the .env.sample and update the values
 4. launch `yarn dev` in the `web` directory
-5. go to the `frontend` directory and launch : SHOPIFY_API_KEY=xxxxxx FRONTEND_PORT=56000 BACKEND_PORT=8081 HOST=livingcolor.ngrok.io npm run dev (BACKEND_PORT and HOST are the ones you find in your `/web/.env` file )
-8. Use ngrok to expose YOUR FRONTEND PORT (56000 in my case) to the internet: `ngrok http 56000 --subdomain=livingcolor`
-9. Optional (only if you want to access some routes without passing by the proxy like the /public directory) : Use ngrok to expose YOUR BACKEND PORT (8081 in my case) to the internet: `ngrok http 8081 --subdomain=livingcolor2`
+5. go to the `frontend` directory and launch : SHOPIFY_API_KEY=xxxxxx FRONTEND_PORT=56000 BACKEND_PORT=8081 HOST=livingcolor.ngrok.io yarn dev (BACKEND_PORT and HOST are the ones you find in your `/web/.env` file )
+6. Use ngrok to expose YOUR FRONTEND PORT (56000 in my case) to the internet: `ngrok http 56000 --subdomain=livingcolor`
+7. Optional (only if you want to access some routes without passing by the proxy like the /public directory) : Use ngrok to expose YOUR BACKEND PORT (8081 in my case) to the internet: `ngrok http 8081 --subdomain=livingcolor2`
 
 :rocket: Enjoy !
 
