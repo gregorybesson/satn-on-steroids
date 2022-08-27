@@ -12,7 +12,7 @@
     "node": ">=14.13.1"
   },
   "dependencies": {
-    "@shopify/shopify-api": "^5.0.0",
+    "@shopify/shopify-api": "^5.0.1",
     "aws-sdk": "^2.1197.0",
     "axios": "^0.27.2",
     "compression": "^1.7.4",
@@ -20,7 +20,6 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.1",
     "express": "^4.17.3",
-    "geofilter": "https://github.com/abecms/omnishop-geofilter",
     "liquidjs": "^9.40.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",

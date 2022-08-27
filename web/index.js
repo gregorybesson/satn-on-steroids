@@ -117,6 +117,18 @@ export async function createServer(
     })
   );
 
+  app.get("/api/shop", async (req, res) => {
+    const session = await Shopify.Utils.loadCurrentSession(
+      req,
+      res,
+      app.get("use-online-tokens")
+    );
+
+    res.json({
+      shop: session?.shop
+    });
+  });
+
   app.get("/api/products/count", async (req, res) => {
     const session = await Shopify.Utils.loadCurrentSession(
       req,
@@ -165,10 +177,10 @@ export async function createServer(
     const devmodules = process.env.DEV_MODULES?.split(",") || [];
     for (const devmodule of devmodules) {
       console.log('dev module:', devmodule);
-      const module = devmodule.split('/').pop();
-      const mod = await import(`${devmodule}/index.js`);
+      const mod = await import(`../app/${devmodule}/index.js`);
+      mod.shopifyInit();
       app.use('/app', mod.router);
-      app.use(`/app/${module}/api/*`,verifyRequest(app, { billing: billingSettings}));
+      app.use(`/app/${devmodule}/api/*`,verifyRequest(app, { billing: billingSettings}));
     };
   }
   app.use('/public', serveStatic(`${process.cwd()}/public/`, { index: false }));
