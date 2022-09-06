@@ -227,9 +227,13 @@ export async function createServer(
     }
 
     if (Shopify.Context.IS_EMBEDDED_APP && req.query.embedded !== "1") {
-      const embeddedUrl = Shopify.Utils.getEmbeddedAppUrl(req);
+      try {
+        const embeddedUrl = Shopify.Utils.getEmbeddedAppUrl(req);
 
-      return res.redirect(embeddedUrl + req.path);
+        return res.redirect(embeddedUrl + req.path);
+      } catch (e) {
+        console.log("TODO: handle error");
+      }
     }
 
     const htmlFile = join(
