@@ -170,7 +170,6 @@ export async function createServer(
   const modules = process.env.MODULES?.split(",") || [];
   for (const module of modules) {
     const mod = await import(module);
-    mod.shopifyInit();
     app.use('/app', mod.router);
     app.use(`/app/${module}/api/*`,verifyRequest(app, { billing: billingSettings}));
   };
