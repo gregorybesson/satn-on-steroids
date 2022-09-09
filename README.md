@@ -129,23 +129,27 @@ The `web/frontend/App.jsx` needs this addition:
 let pages = import.meta.globEager("./pages/**/!(*.test.[jt]sx)*.([jt]sx)");
 
 // SATN
-let modulesPages = import.meta.globEager("./node_modules/**/frontend/pages/**/!(*.test.[jt]sx)*.([jt]sx)");
-pages = { ...modulesPages, ...pages };
-const links = Object.keys(pages).filter(key => !key.includes('index') && !key.includes('NotFound')).map((key) => {
-  let destination = key
-    .replace(/\.\/node_modules\/(.*)\/frontend\/pages/, "")
-    .replace("./pages", "")
-    .replace(/\.(t|j)sx?$/, "")
-  let label = destination
-    .replace('/', '')
-    .replace(/\b[a-z]/, (firstLetter) => firstLetter.toUpperCase())
+// SATN
+  let modulesPages = import.meta.globEager("./node_modules/**/frontend/pages/**/!(*.test.[jt]sx)*.([jt]sx)");
+  pages = { ...modulesPages, ...pages };
+  let devModulesPages = import.meta.globEager("./../app/**/frontend/pages/**/!(*.test.[jt]sx)*.([jt]sx)");
+  pages = { ...devModulesPages, ...pages };
+  const links = Object.keys(pages).filter(key => !key.includes('index') && !key.includes('NotFound')).map((key) => {
+    let destination = key
+      .replace(/\.\/\.\.\/app\/(.*)\/frontend\/pages/, "")
+      .replace(/\.\/node_modules\/(.*)\/frontend\/pages/, "")
+      .replace("./pages", "")
+      .replace(/\.(t|j)sx?$/, "")
+    let label = destination
+      .replace('/', '')
+      .replace(/\b[a-z]/, (firstLetter) => firstLetter.toUpperCase())
 
-  return {
-    destination,
-    label,
-  }
-});
-// /SATN
+    return {
+      destination,
+      label,
+    }
+  });
+  // /SATN
 ```
 
 And you need to change the navigationLinks to: `navigationLinks={links}`
@@ -156,23 +160,51 @@ let modulesPages = import.meta.globEager("./node_modules/**/frontend/pages/**/!(
 pages = { ...modulesPages, ...pages };
 ```
 
+- The following code searches for all the pages in the /app directory for the modules you develop and adds them to the pages object.
+```
+let devModulesPages = import.meta.globEager("./../app/**/frontend/pages/**/!(*.test.[jt]sx)*.([jt]sx)");
+  pages = { ...devModulesPages, ...pages };
+```
+
 - The rest of the code will be used to generate the navigation menu.
 
 The `web/frontend/Routes.jsx` needs this addition:
 ```
 .map((key) => {
       let path = key
-        .replace(/\.\/node_modules\/(.*)\/frontend\/pages/, "")   <=====
+        .replace(/\.\/\.\.\/app\/(.*)\/frontend\/pages/, "")      <===== FOR YOUR DEV MODULES
+        .replace(/\.\/node_modules\/(.*)\/frontend\/pages/, "")   <===== FOR YOUR PACKAGED MODULES
         .replace("./pages", "")
 ```
 - This single line removes the undesirable part of the path of your Shopify app package.
 
-For development, we need to add a line to the proxy filter in `web/frontend/vite.config.js`:
+For development, we need to modify `web/frontend/vite.config.js`:
+1. we need to add 2 lines to the proxy filter:
 ```
 proxy: {
   "^/(\\?.*)?$": proxyOptions,
-  "^/app(/|(\\?.*)?$)": proxyOptions, proxyOptions, <======= Here
+  "^/app/(.*)/api(/|(\\?.*)?$)": proxyOptions,  <=== Your routes for the admin pages
+  "^/app(/|(\\?.*)?$)": proxyOptions,           <=== All other routes
   "^/api(/|(\\?.*)?$)": proxyOptions,
+},
+```
+2. We add the `fs` attribute to the server entry so that vite can find files one level up to the project root (your dev modules in /app)
+```
+fs: {
+      // Allow serving files from one level up to the project root
+      allow: ['..'],
+    },
+```
+3. During the production compilation, we want to deduplicate the Shopify libs. The resolve entry becomes:
+```
+resolve: {
+  preserveSymlinks: true,
+  dedupe: [
+    '@shopify/app-bridge-react',
+    '@shopify/app-bridge-utils',
+    '@shopify/polaris',
+    '@shopify/shopify-api',
+  ],
 },
 ```
 
