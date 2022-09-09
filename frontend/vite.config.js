@@ -62,6 +62,12 @@ export default defineConfig({
   },
   resolve: {
     preserveSymlinks: true,
+    dedupe: [
+      '@shopify/app-bridge-react',
+      '@shopify/app-bridge-utils',
+      '@shopify/polaris',
+      '@shopify/shopify-api',
+    ],
   },
   server: {
     host: "localhost",
