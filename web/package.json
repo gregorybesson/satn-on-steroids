@@ -26,7 +26,8 @@
     "node-cache": "^5.1.2",
     "nodemailer": "^6.7.8",
     "satn-aws-wrapper": "https://github.com/gregorybesson/satn-aws-wrapper",
-    "serve-static": "^1.14.1"
+    "serve-static": "^1.14.1",
+    "sqlite3": "^5.1.2"
   },
   "devDependencies": {
     "jsonwebtoken": "^8.5.1",

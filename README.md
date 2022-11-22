@@ -241,7 +241,7 @@ Enjoy!
 6. launch `yarn dev` (BACKEND_PORT and HOST are the ones you find in your `/web/.env` file )
 6. Use ngrok to expose YOUR FRONTEND PORT (taken from `FRONTEND_PORT` in your .env file) to the internet: `ngrok http 56000 --subdomain=livingcolor` (FRONTEND_PORT=56000 in my example)
 7. (very) Optional (only if you want to access some routes without passing by the proxy like the /public directory) : Use ngrok to expose YOUR BACKEND PORT (8081 in my case) to the internet: `ngrok http 8081 --subdomain=livingcolor2`
-8. Install the app: `https://livingcolor.ngrok.io/api/auth?shop=yourdevshop.myshopify.com&host=bGl2aW5nY29sb3Iubmdyb2suaW8=&embedded=1` (bGl2aW5nY29sb3Iubmdyb2suaW8= : livingcolor.ngrok.io in base64)
+8. Install the app: `https://livingcolor.ngrok.io/api/auth?shop=stdupont-dev.myshopify.com&host=bGl2aW5nY29sb3Iubmdyb2suaW8=&embedded=1` (bGl2aW5nY29sb3Iubmdyb2suaW8= : livingcolor.ngrok.io in base64)
 
 :rocket: Enjoy !
 
@@ -254,10 +254,9 @@ It means that you'll develop your app in a separate directory and you'll just ha
 During the development phase, you'll create the app in the `/app` directory (this directory is in the .gitignore file of satn, so that it's never seen by satn git).
 Just proceed as usually: npm init your package to set it up. You 'll use this directory in the /app directory during the dev (and you could even keep it in production), but I strongly advise to deploy it in your npm provate registry so that you just have to install it as a npm package in production.
 
-
 The organisation of your Shopify app project inside the app directory is that simple:
 - app
-  - MySuperApp
+  - mySuperApp
     - extensions
       - ... your extensions
     - frontend
@@ -300,4 +299,12 @@ It means that we will:
 
 After this tutorial you'll become a real Shopify App developer ! A Satnist !
 
-TBD
+1. Create the app on Shopify partner
+2. Add your app (`mySuperApp`) to both package.json: The one in /web and the one in /frontend
+3. 
+
+# TIPS & HINTS
+- If you want to desinstall then reinstall your app on a dev store, check that the session has been deleted on AWS DynamoDB
+- If you want to change the proxy address in your app config, first delete the previous and recreate it. Modifying the original silently fails.
+- If you want to install this package on M1 Mac, you'll have to install sql3 and compile it: `npm install sqlite3 --build-from-source --target_arch=arm64 --fallback-to-build`
+

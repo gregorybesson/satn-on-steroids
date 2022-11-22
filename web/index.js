@@ -28,6 +28,7 @@ global.appRoot = path.resolve(__dirname);
 await dynamo.createTable();
 const DEV_INDEX_PATH = `${process.cwd()}/../frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()}/../frontend/dist/`;
+const isProd = process.env.NODE_ENV === "production";
 // /SATN
 
 const USE_ONLINE_TOKENS = false;
@@ -77,6 +78,32 @@ const BILLING_SETTINGS = {
 // More details can be found on shopify.dev:
 // https://shopify.dev/apps/webhooks/configuration/mandatory-webhooks
 setupGDPRWebHooks("/api/webhooks");
+
+// SATN - We instantiate the webhooks from the module(s)
+const modules = process.env.MODULES?.split(",") || [];
+for (const module of modules) {
+  const mod = await import(module);
+  try {
+    mod.webhooksInit();
+    mod.cronInit();
+  } catch (e) {
+    console.log('webhooksInit error', e);
+  }
+};
+if (!isProd) {
+  const devmodules = process.env.DEV_MODULES?.split(",") || [];
+  for (const devmodule of devmodules) {
+    console.log('dev module:', devmodule);
+    const mod = await import(`../app/${devmodule}/index.js`);
+    try {
+      mod.webhooksInit(Shopify);
+      mod.cronInit();
+    } catch (e) {
+      console.log('error:', e);
+    }
+  };
+}
+// /SATN
 
 // export for test use only
 export async function createServer(
@@ -217,7 +244,7 @@ export async function createServer(
 
     if (typeof req.query.shop !== "string") {
       res.status(500);
-      return res.send("No shop provided");
+      return res.send("No shop provided sorry");
     }
 
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);

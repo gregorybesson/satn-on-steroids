@@ -26,6 +26,9 @@ export default function applyAuthMiddleware(
       });
 
       Object.entries(responses).map(([topic, response]) => {
+        if (response.success) {
+          console.log(`✅ Successfully registered ${topic} webhook`);
+        }
         // The response from registerAll will include errors for the GDPR topics.  These can be safely ignored.
         // To register the GDPR topics, please set the appropriate webhook endpoint in the
         // 'GDPR mandatory webhooks' section of 'App setup' in the Partners Dashboard.
