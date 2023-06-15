@@ -2,7 +2,7 @@
 
 This project uses the last version of [Shopify App Template - Node](https://github.com/Shopify/shopify-app-template-node) and stay in sync with it (for now, we use the most up to date branch : cli_three).
 
-and it brings on the developer's table a new dimension to make developing Shopify apps a breeze!
+and it brings a new tool on the Shopify developer's table to make developing Shopify apps a breeze!
 
 ## Why Satn on Steroids?
 Shopify App Template - Node (S A T N... you see? ;) based on cli 3 is a great project: It boosts your productivity and helps you to build Shopify apps in a breeze.
@@ -107,7 +107,8 @@ global.appRoot = path.resolve(__dirname);
     app.use(`/app/${module}/api/*`,verifyRequest(app, { billing: billingSettings}));
   };
 ```
-- Note that I'm not big fan of git submodules, I've moved the frontend directory in the root directory of the project + I've made it a first class citizen in the project as it will become a "gateway" to gather frontends from all your apps (see below).
+- Note that I'm not a big fan of git submodules, I've moved the frontend directory in the root directory of the project + I've made it a first class citizen in the project as it will become a "gateway" to gather frontends from all your apps (see below).
+
 ```
 const DEV_INDEX_PATH = `${process.cwd()}/../frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()}/../frontend/dist/`;
@@ -128,7 +129,7 @@ The `web/frontend/App.jsx` needs this addition:
 ```
 let pages = import.meta.globEager("./pages/**/!(*.test.[jt]sx)*.([jt]sx)");
 
-// SATN
+```
 // SATN
   let modulesPages = import.meta.globEager("./node_modules/**/frontend/pages/**/!(*.test.[jt]sx)*.([jt]sx)");
   pages = { ...modulesPages, ...pages };
@@ -239,7 +240,7 @@ Enjoy!
 4. launch `yarn dev` in the `web` directory
 5. go to the `frontend` directory and rename the .env.sample and update the values
 6. launch `yarn dev` (BACKEND_PORT and HOST are the ones you find in your `/web/.env` file )
-6. Use ngrok to expose YOUR FRONTEND PORT (taken from `FRONTEND_PORT` in your .env file) to the internet: `ngrok http 56000 --subdomain=livingcolor` (FRONTEND_PORT=56000 in my example)
+6. Use ngrok to expose YOUR FRONTEND PORT (taken from `FRONTEND_PORT` in your .env file) to the internet: `ngrok http 56000 --region=us --hostname=livingcolor.ngrok.io` (FRONTEND_PORT=56000 in my example)
 7. (very) Optional (only if you want to access some routes without passing by the proxy like the /public directory) : Use ngrok to expose YOUR BACKEND PORT (8081 in my case) to the internet: `ngrok http 8081 --subdomain=livingcolor2`
 8. Install the app: `https://livingcolor.ngrok.io/api/auth?shop=stdupont-dev.myshopify.com&host=bGl2aW5nY29sb3Iubmdyb2suaW8=&embedded=1` (bGl2aW5nY29sb3Iubmdyb2suaW8= : livingcolor.ngrok.io in base64)
 
@@ -252,7 +253,7 @@ It means that you'll develop your app in a separate directory and you'll just ha
 
 ## How to create your own package
 During the development phase, you'll create the app in the `/app` directory (this directory is in the .gitignore file of satn, so that it's never seen by satn git).
-Just proceed as usually: npm init your package to set it up. You 'll use this directory in the /app directory during the dev (and you could even keep it in production), but I strongly advise to deploy it in your npm provate registry so that you just have to install it as a npm package in production.
+Just proceed as usually: npm init your package to set it up. You 'll use this directory in the /app directory during the dev (and you could even keep it in production), but I strongly advise to deploy it in your npm private registry so that you just have to install it as a npm package in production.
 
 The organisation of your Shopify app project inside the app directory is that simple:
 - app
