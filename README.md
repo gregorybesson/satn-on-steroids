@@ -244,6 +244,8 @@ Enjoy!
 7. (very) Optional (only if you want to access some routes without passing by the proxy like the /public directory) : Use ngrok to expose YOUR BACKEND PORT (8081 in my case) to the internet: `ngrok http 8081 --subdomain=livingcolor2`
 8. Install the app: `https://livingcolor.ngrok.io/api/auth?shop=stdupont-dev.myshopify.com&host=bGl2aW5nY29sb3Iubmdyb2suaW8=&embedded=1` (bGl2aW5nY29sb3Iubmdyb2suaW8= : livingcolor.ngrok.io in base64)
 
+**(CAUTION: If you have already installed the app and uninstalled it, remove the keys in the database - dynamodb)**
+
 :rocket: Enjoy !
 
 # Architecture of your Shopify App
@@ -300,12 +302,35 @@ It means that we will:
 
 After this tutorial you'll become a real Shopify App developer ! A Satnist !
 
+## Create and install the app
 1. Create the app on Shopify partner
-2. Add your app (`mySuperApp`) to both package.json: The one in /web and the one in /frontend
-3. 
+2. Add your app (`mySuperApp`) and the keys to both package.json: The one in /web and the one in /frontend
+3. Add the same keys in the root of Satn: This is from there that we will install the web extension and we need to have these keys setup.
+4. Launch the installation from the app page on Shopify partner on your dev store
+
+## Create the admin page
+
+
+
+
 
 # TIPS & HINTS
 - If you want to desinstall then reinstall your app on a dev store, check that the session has been deleted on AWS DynamoDB
 - If you want to change the proxy address in your app config, first delete the previous and recreate it. Modifying the original silently fails.
 - If you want to install this package on M1 Mac, you'll have to install sql3 and compile it: `npm install sqlite3 --build-from-source --target_arch=arm64 --fallback-to-build`
+
+
+## Create a theme extension
+1. Create the theme extension:
+```bash
+npm run shopify app generate extension
+```
+
+Then choose the The app extension type: `Theme extension` and its name
+
+2. Once done, you'll have to deploy the extension:
+```bash
+npm run deploy
+```
+
 

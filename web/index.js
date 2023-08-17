@@ -145,6 +145,8 @@ export async function createServer(
   );
 
   app.get("/api/shop", async (req, res) => {
+    //console.log('/api/shop');
+    
     const session = await Shopify.Utils.loadCurrentSession(
       req,
       res,
@@ -198,6 +200,7 @@ export async function createServer(
   const modules = process.env.MODULES?.split(",") || [];
   for (const module of modules) {
     const mod = await import(module);
+    app.use(`/app/${module}/public`, serveStatic(`${process.cwd()}/node_modules/${module}/public/`, { index: false }));
     app.use('/app', mod.router);
     app.use(`/app/${module}/api/*`,verifyRequest(app, { billing: billingSettings}));
   };
@@ -207,6 +210,7 @@ export async function createServer(
       console.log('dev module:', devmodule);
       const mod = await import(`../app/${devmodule}/index.js`);
       mod.shopifyInit();
+      app.use(`/app/${devmodule}/public`, serveStatic(`${process.cwd()}/../app/${devmodule}/public/`, { index: false }));
       app.use('/app', mod.router);
       app.use(`/app/${devmodule}/api/*`,verifyRequest(app, { billing: billingSettings}));
     };
