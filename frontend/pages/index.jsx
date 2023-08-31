@@ -4,9 +4,9 @@ import {
   Layout,
   TextContainer,
   Image,
-  Stack,
+  LegacyStack,
   Link,
-  Heading,
+  Text,
 } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
 
@@ -21,15 +21,15 @@ export default function HomePage() {
       <Layout>
         <Layout.Section>
           <Card sectioned>
-            <Stack
+            <LegacyStack
               wrap={false}
               spacing="extraTight"
               distribution="trailing"
               alignment="center"
             >
-              <Stack.Item fill>
+              <LegacyStack.Item fill>
                 <TextContainer spacing="loose">
-                  <Heading>Nice work on building a Shopify app 🎉</Heading>
+                  <Text variant="headingMd" as="h4">Nice work on building a Shopify app 🎉</Text>
                   <p>
                     Your app is ready to explore! It contains everything you
                     need to get started including the{" "}
@@ -64,8 +64,8 @@ export default function HomePage() {
                     📚{" "}
                   </p>
                 </TextContainer>
-              </Stack.Item>
-              <Stack.Item>
+              </LegacyStack.Item>
+              <LegacyStack.Item>
                 <div style={{ padding: "0 20px" }}>
                   <Image
                     source={trophyImage}
@@ -73,8 +73,8 @@ export default function HomePage() {
                     width={120}
                   />
                 </div>
-              </Stack.Item>
-            </Stack>
+              </LegacyStack.Item>
+            </LegacyStack>
           </Card>
         </Layout.Section>
         <Layout.Section>

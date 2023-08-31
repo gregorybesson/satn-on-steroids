@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
   Card,
-  Heading,
+  Text,
   TextContainer,
   DisplayText,
   TextStyle,
@@ -66,14 +66,12 @@ export function ProductsCard() {
             Sample products are created with a default title and price. You can
             remove them at any time.
           </p>
-          <Heading element="h4">
+          <Text variant="headingMd" as="h4">
             TOTAL PRODUCTS
-            <DisplayText size="medium">
-              <TextStyle variation="strong">
-                {isLoadingCount ? "-" : data.count}
-              </TextStyle>
-            </DisplayText>
-          </Heading>
+          </Text>
+          <Text variation="strong">
+            {isLoadingCount ? "-" : data.count}
+          </Text>
         </TextContainer>
       </Card>
     </>
