@@ -3,8 +3,6 @@ import {
   Card,
   Text,
   TextContainer,
-  DisplayText,
-  TextStyle,
 } from "@shopify/polaris";
 import { Toast } from "@shopify/app-bridge-react";
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";

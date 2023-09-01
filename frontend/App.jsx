@@ -19,9 +19,9 @@ export default function App() {
   pages = { ...modulesPages, ...pages };
   let devModulesPages = import.meta.globEager("./../app/**/frontend/pages/**/!(*.test.[jt]sx)*.([jt]sx)");
   pages = { ...devModulesPages, ...pages };
-  const links = Object.keys(pages).filter(key => !key.includes('index') && !key.includes('NotFound')).map((key) => {
+  const links = Object.keys(pages).filter(key => !key.includes('NotFound')).map((key) => {
     let destination = key
-      .replace(/\.\/\.\.\/app\/(.*)\/frontend\/pages/, "")
+      .replace(/\.\.\/app\/(.*)\/frontend\/pages/, "")
       .replace(/\.\/node_modules\/(.*)\/frontend\/pages/, "")
       .replace("./pages", "")
       .replace(/\.(t|j)sx?$/, "")
@@ -32,7 +32,7 @@ export default function App() {
     return {
       destination,
       label,
-    }
+    };
   });
   // /SATN
 
