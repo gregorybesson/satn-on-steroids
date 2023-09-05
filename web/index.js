@@ -15,10 +15,12 @@ import { AppInstallations } from "./app_installations.js";
 
 // SATN
 import { dynamo, DynamoSessionStorage } from 'satn-aws-wrapper';
+import * as cacheProvider from "satn-cache-provider";
 import serveStatic from "serve-static";
 import dotenv from "dotenv";
 import path from 'path';
 import { fileURLToPath } from 'url';
+
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,6 +28,9 @@ global.appRoot = path.resolve(__dirname);
 // The DynamoDB table must be created the very first time the server is launched.
 // If it already exists, it continues
 await dynamo.createTable();
+cacheProvider.start(function (err) {
+  if (err) console.error(err);
+});
 const DEV_INDEX_PATH = `${process.cwd()}/../frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()}/../frontend/dist/`;
 const isProd = process.env.NODE_ENV === "production";
