@@ -13,6 +13,11 @@
   },
   "dependencies": {
     "@shopify/app": "^3.48.1",
-    "@shopify/cli": "^3.48.1"
+    "@shopify/cli": "^3.48.1",
+    "@shopify/shopify_function": "0.1.0",
+    "@shopify/ui-extensions": "2023.7.x",
+    "@shopify/ui-extensions-react": "2023.7.x",
+    "javy": "0.1.1",
+    "react": "^17.0.0"
   }
 }

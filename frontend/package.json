@@ -15,17 +15,17 @@
     "@shopify/app-bridge": "^3.7.9",
     "@shopify/app-bridge-react": "^3.7.9",
     "@shopify/app-bridge-utils": "^3.1.0",
-    "@shopify/discount-app-components": "^1.2.0",
-    "@shopify/polaris": "^11.13.0",
-    "@shopify/polaris-icons": "^7.8.1",
+    "@shopify/discount-app-components": "^1.5.0",
+    "@shopify/polaris": "^11.25.0",
+    "@shopify/polaris-icons": "^7.9.0",
     "@shopify/react-form": "^2.5.5",
     "@shopify/react-i18n": "^7.8.0",
-    "@vitejs/plugin-react": "4.0.4",
+    "@vitejs/plugin-react": "4.1.0",
     "dotenv": "^16.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
-    "react-router-dom": "^6.15.0",
+    "react-router-dom": "^6.16.0",
     "vite": "^4.4.9"
   },
   "devDependencies": {
@@ -34,6 +34,6 @@
     "jsdom": "^22.1.0",
     "prettier": "^3.0.3",
     "vi-fetch": "^0.8.0",
-    "vitest": "^0.34.3"
+    "vitest": "^0.34.6"
   }
 }

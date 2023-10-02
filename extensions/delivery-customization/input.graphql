@@ -1,0 +1,7 @@
+query Input {
+  deliveryCustomization {
+    metafield(namespace: "$app:delivery-customization", key: "function-configuration") {
+      value
+    }
+  }
+}
