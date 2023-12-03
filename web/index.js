@@ -20,6 +20,8 @@ import serveStatic from "serve-static";
 import dotenv from "dotenv";
 import path from 'path';
 import { fileURLToPath } from 'url';
+import * as winston from 'winston';
+import * as Sentry from "@sentry/node";
 
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
@@ -34,6 +36,19 @@ cacheProvider.start(function (err) {
 const DEV_INDEX_PATH = `${process.cwd()}/../frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()}/../frontend/dist/`;
 const isProd = process.env.NODE_ENV === "production";
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.printf(
+      (info) => `${info.timestamp} ${info.level}: ${info.message}`
+    )
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "logs/app.log" }),
+  ],
+});
 // /SATN
 
 const USE_ONLINE_TOKENS = false;
@@ -117,6 +132,16 @@ export async function createServer(
   billingSettings = BILLING_SETTINGS
 ) {
   const app = express();
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    integrations: [
+      new Sentry.Integrations.Http({ tracing: true }),
+      new Sentry.Integrations.Express({ app }),
+    ],
+    tracesSampleRate: 1.0,
+  });
+  app.use(Sentry.Handlers.requestHandler());
+  app.use(Sentry.Handlers.tracingHandler());
 
   app.set("use-online-tokens", USE_ONLINE_TOKENS);
   app.use(cookieParser(Shopify.Context.API_SECRET_KEY));
@@ -283,6 +308,9 @@ export async function createServer(
       .set("Content-Type", "text/html")
       .send(readFileSync(htmlFile));
   });
+
+  // The error handler must be before any other error middleware and after all controllers
+  app.use(Sentry.Handlers.errorHandler());
 
   return { app };
 }
